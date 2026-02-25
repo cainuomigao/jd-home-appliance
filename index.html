@@ -5,196 +5,1016 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>家电优选 | 京东官方好物推荐</title>
     <style>
+        /* 全局样式重置+基础变量 */
+        :root {
+            --jd-red: #e92323;
+            --jd-red-deep: #d01919;
+            --gray-light: #f5f7fa;
+            --gray-mid: #e5e6eb;
+            --gray-dark: #666;
+            --text-main: #333;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
         }
 
         body {
-            background: #f5f5f5;
+            background: linear-gradient(to bottom, var(--gray-light), #fff);
+            color: var(--text-main);
+            line-height: 1.5;
         }
 
-        /* 顶部 */
-        header {
-            background: #e92323;
+        /* 顶部导航栏（吸顶+渐变） */
+        .nav {
+            background: linear-gradient(90deg, var(--jd-red), var(--jd-red-deep));
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            padding: 0 20px;
+            backdrop-filter: blur(8px);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        .nav-logo {
             color: white;
-            padding: 14px 20px;
-            text-align: center;
-            font-size: 18px;
             font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-logo::before {
+            content: "🛒";
+            font-size: 20px;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 24px;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            padding: 8px 0;
+            position: relative;
+            transition: var(--transition);
+        }
+        .nav-menu a:hover, .nav-menu a.active {
+            color: white;
+        }
+        .nav-menu a.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
         }
 
-        /* 说明条 */
-        .tip {
-            background: #fff9e6;
-            color: #ff6a00;
-            padding: 10px;
+        /* 头部Banner（渐变+圆角） */
+        .header {
+            background: linear-gradient(135deg, var(--jd-red-deep), var(--jd-red));
+            color: white;
+            padding: 30px 0;
             text-align: center;
-            font-size: 14px;
-            border-bottom: 1px solid #ffdf8b;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .header p {
+            font-size: 15px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 限时优惠提示（闪动+渐变） */
+        .discount-tip {
+            background: linear-gradient(to right, #fff0f0, #ffe8e8);
+            color: var(--jd-red);
+            padding: 12px;
+            text-align: center;
+            font-size: 15px;
+            border-radius: var(--radius-sm);
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        .discount-tip .countdown {
+            font-weight: bold;
+            font-size: 16px;
+            background: var(--jd-red);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+
+        /* 轮播图（自动播放+圆角+阴影） */
+        .banner {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            height: 300px;
+        }
+        .banner-slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        .banner-slide.active {
+            display: block;
+        }
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .banner img:hover {
+            transform: scale(1.02);
+        }
+        .banner-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .banner-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .banner-dot.active {
+            background: white;
+            width: 20px;
+            border-radius: 5px;
+        }
+
+        /* 品牌推荐区 */
+        .brand-section {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+        }
+        .brand-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: var(--jd-red);
+            border-radius: 2px;
+        }
+        .brand-list {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .brand-list::-webkit-scrollbar {
+            height: 4px;
+        }
+        .brand-list::-webkit-scrollbar-thumb {
+            background: var(--gray-mid);
+            border-radius: 4px;
+        }
+        .brand-item {
+            flex: 0 0 80px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .brand-item:hover {
+            transform: translateY(-3px);
+        }
+        .brand-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            box-shadow: var(--shadow-sm);
+            font-size: 24px;
+            color: var(--jd-red);
+        }
+        .brand-name {
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        /* 分类标题（美化） */
+        .category-title {
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            padding: 0 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: var(--jd-red);
+            border-radius: 2px;
         }
 
         /* 商品容器 */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px 30px;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            gap: 20px;
         }
 
-        /* 商品卡片 */
+        /* 商品卡片（精美版核心） */
         .product {
             background: white;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: transform 0.2s;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
             cursor: pointer;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
-
         .product:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
         }
-
-        .product img {
+        /* 角标（渐变+立体） */
+        .product-tag-corner {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(45deg, var(--jd-red), #ff6a00);
+            color: white;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(233,35,35,0.3);
+        }
+        /* 商品图片容器（圆角+溢出隐藏） */
+        .product-img-wrap {
             width: 100%;
             height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        .product img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            transition: var(--transition);
         }
-
+        .product:hover img {
+            transform: scale(1.08);
+        }
+        /* 商品折扣标（图片上悬浮） */
+        .product-discount {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: var(--jd-red);
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        /* 商品信息区 */
         .product-info {
-            padding: 14px;
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-
         .product-title {
             font-size: 15px;
-            color: #333;
-            line-height: 1.4;
-            height: 42px;
+            color: var(--text-main);
+            line-height: 1.5;
+            height: 45px;
             overflow: hidden;
             margin-bottom: 10px;
+            transition: var(--transition);
         }
-
+        .product:hover .product-title {
+            color: var(--jd-red);
+        }
+        /* 价格区域（渐变文字+对比） */
+        .product-price-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
         .product-price {
-            color: #e92323;
-            font-size: 20px;
+            color: var(--jd-red);
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 6px;
+            background: linear-gradient(to right, var(--jd-red-deep), var(--jd-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
+        .product-price-original {
+            color: var(--gray-dark);
+            font-size: 13px;
+            text-decoration: line-through;
+            opacity: 0.8;
+        }
+        /* 销量/好评率（图标化） */
+        .product-sales {
+            font-size: 13px;
+            color: var(--gray-dark);
+            margin-bottom: 12px;
+            display: flex;
+            gap: 15px;
+        }
+        .product-sales span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .product-sales span::before {
+            font-size: 12px;
+        }
+        .sales-icon::before {
+            content: "📈";
+        }
+        .rating-icon::before {
+            content: "⭐";
+        }
+        /* 标签（美化） */
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
         .product-tag {
             display: inline-block;
-            background: #fef1f0;
-            color: #e92323;
+            background: linear-gradient(to right, #fef1f0, #fee9e8);
+            color: var(--jd-red);
             font-size: 12px;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 4px;
-            margin-right: 5px;
+            border: 1px solid #fcd4d2;
         }
 
-        /* 底部 */
-        footer {
-            text-align: center;
-            padding: 20px;
+        /* 用户好评区 */
+        .review-section {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+        }
+        .review-list {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .review-list::-webkit-scrollbar {
+            height: 4px;
+        }
+        .review-list::-webkit-scrollbar-thumb {
+            background: var(--gray-mid);
+            border-radius: 4px;
+        }
+        .review-item {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 15px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .review-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .review-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--jd-red);
+            font-size: 16px;
+        }
+        .user-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        .review-rating {
+            color: #ffd100;
             font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .review-content {
+            font-size: 13px;
+            color: var(--gray-dark);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 售后保障区 */
+        .service-section {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+        .service-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+        .service-icon {
+            font-size: 20px;
+            color: var(--jd-red);
+        }
+        .service-text {
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        /* 底部（美化） */
+        .footer {
+            background: linear-gradient(to top, #f8f8f8, white);
+            margin-top: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-dark);
+            border-top: 1px solid var(--gray-mid);
+        }
+        .footer p {
+            margin-bottom: 10px;
+        }
+        .footer .copyright {
             color: #999;
+            font-size: 12px;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .footer-links a {
+            color: var(--gray-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .footer-links a:hover {
+            color: var(--jd-red);
+        }
+
+        /* 加载动效（备用） */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--gray-light);
+            border-bottom-color: var(--jd-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 50px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 移动端适配（精美效果保留） */
+        @media (max-width: 768px) {
+            .nav-content {
+                height: 50px;
+            }
+            .nav-logo {
+                font-size: 16px;
+            }
+            .nav-menu {
+                gap: 15px;
+            }
+            .nav-menu a {
+                font-size: 13px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .banner {
+                height: 180px;
+            }
+            .container {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            .product-img-wrap {
+                height: 150px;
+            }
+            .product-title {
+                font-size: 13px;
+                height: 40px;
+            }
+            .product-price {
+                font-size: 18px;
+            }
+            .product-sales {
+                font-size: 12px;
+                gap: 8px;
+            }
+            .brand-item {
+                flex: 0 0 70px;
+            }
+            .brand-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            .service-item {
+                min-width: 100px;
+            }
+            .service-icon {
+                font-size: 18px;
+            }
+            .service-text {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 
 <body>
-
-<header>
-    家电优选 · 京东官方好物推荐
-</header>
-
-<div class="tip">
-    🛒 点击商品 → 自动跳转到京东购买 → 官方发货 · 售后保障
-</div>
-
-<div class="container" id="productList">
-    <!-- 商品1 -->
-    <div class="product" onclick="go('https://u.jd.com/https://u.jd.com/lORVKX2')">
-        <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/6fe74e285ee74ddeb7059877f34b778b~tplv-be4g95zd3a-image.jpeg" alt="冰箱">
-        <div class="product-info">
-            <div class="product-title">海尔 470升对开门冰箱 风冷无霜 变频节能</div>
-            <div class="product-price">¥3299</div>
-            <span class="product-tag">京东热卖</span>
-            <span class="product-tag">一级能效</span>
+    <!-- 顶部导航栏 -->
+    <div class="nav">
+        <div class="nav-content">
+            <div class="nav-logo">家电优选 · 京东好物</div>
+            <div class="nav-menu">
+                <a href="#aircon" class="active">空调</a>
+                <a href="#refrigerator">冰箱</a>
+                <a href="#washer">洗衣机</a>
+                <a href="#small">小家电</a>
+            </div>
         </div>
     </div>
 
-    <!-- 商品2 -->
-    <div class="product" onclick="go('https://u.jd.com/你的链接2')">
-        <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_4b019cf8a81b6a9250a66c252248849d_sx_67378_www800-800~tplv-be4g95zd3a-image.jpeg" alt="冰箱">
-        <div class="product-info">
-            <div class="product-title">美的 325升法式多门冰箱 风冷无霜 智能家电</div>
-            <div class="product-price">¥2599</div>
-            <span class="product-tag">性价比</span>
-            <span class="product-tag">静音</span>
+    <!-- 头部banner -->
+    <div class="header">
+        <h1>京东官方家电优选 · 正品保障 假一赔十</h1>
+        <p>点击商品直达京东下单 · 官方发货 · 全国联保 · 7天无理由退换</p>
+    </div>
+
+    <!-- 限时优惠提示 -->
+    <div class="discount-tip">
+        🕒 京东618提前购 限时优惠仅剩 <span class="countdown">2天8小时</span> · 下单立减最高500元 + 赠安装服务
+    </div>
+
+    <!-- 轮播图（自动播放） -->
+    <div class="banner" id="banner">
+        <!-- 轮播1：格力空调 -->
+        <div class="banner-slide active" onclick="go('https://u.jd.com/laRTPNH')">
+            <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/v1_gnKoCQEy_70860048935169395590210_f9138b30b8fe31f02aeca137c1261707_sx_101722_www800-800~tplv-be4g95zd3a-image.jpeg" alt="格力空调爆款推荐">
+        </div>
+        <!-- 轮播2：海尔冰箱 -->
+        <div class="banner-slide" onclick="go('https://u.jd.com/你的海尔冰箱链接')">
+            <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/6fe74e285ee74ddeb7059877f34b778b~tplv-be4g95zd3a-image.jpeg" alt="海尔冰箱爆款推荐">
+        </div>
+        <!-- 轮播3：美的洗衣机 -->
+        <div class="banner-slide" onclick="go('https://u.jd.com/你的美的洗衣机链接')">
+            <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/v1_hyqFnYYD_70778570379834493790799_382373ceca72ada82be4efe003c2ab16_sx_171884_www800-800~tplv-be4g95zd3a-image.jpeg" alt="美的洗衣机爆款推荐">
+        </div>
+        <!-- 轮播指示器 -->
+        <div class="banner-dots" id="bannerDots">
+            <div class="banner-dot active" data-index="0"></div>
+            <div class="banner-dot" data-index="1"></div>
+            <div class="banner-dot" data-index="2"></div>
         </div>
     </div>
 
-    <!-- 商品3 -->
-    <div class="product" onclick="go('https://u.jd.com/你的链接3')">
-        <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/v1_hyqFnYYD_70778570379834493790799_382373ceca72ada82be4efe003c2ab16_sx_171884_www800-800~tplv-be4g95zd3a-image.jpeg" alt="洗衣机">
-        <div class="product-info">
-            <div class="product-title">海尔 10公斤洗烘一体机 滚筒洗衣机 全自动变频</div>
-            <div class="product-price">¥2999</div>
-            <span class="product-tag">洗烘一体</span>
-            <span class="product-tag">除菌</span>
+    <!-- 品牌推荐区 -->
+    <div class="brand-section">
+        <div class="brand-title">热门品牌</div>
+        <div class="brand-list">
+            <div class="brand-item">
+                <div class="brand-icon">格</div>
+                <div class="brand-name">格力</div>
+            </div>
+            <div class="brand-item">
+                <div class="brand-icon">海</div>
+                <div class="brand-name">海尔</div>
+            </div>
+            <div class="brand-item">
+                <div class="brand-icon">美</div>
+                <div class="brand-name">美的</div>
+            </div>
+            <div class="brand-item">
+                <div class="brand-icon">小</div>
+                <div class="brand-name">小米</div>
+            </div>
+            <div class="brand-item">
+                <div class="brand-icon">华</div>
+                <div class="brand-name">华帝</div>
+            </div>
+            <div class="brand-item">
+                <div class="brand-icon">苏</div>
+                <div class="brand-name">苏泊尔</div>
+            </div>
+            <div class="brand-item">
+                <div class="brand-icon">奥</div>
+                <div class="brand-name">奥克斯</div>
+            </div>
         </div>
     </div>
 
-    <!-- 商品4 -->
-    <div class="product" onclick="go('https://u.jd.com/你的链接4')">
-        <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_2b7e76581e37158ad86f5d5ef8d7c770_sx_144014_www1280-1280~tplv-be4g95zd3a-image.jpeg" alt="洗衣机">
-        <div class="product-info">
-            <div class="product-title">美的 9公斤波轮洗衣机 全自动 家用大容量</div>
-            <div class="product-price">¥1299</div>
-            <span class="product-tag">特价</span>
-            <span class="product-tag">租房神器</span>
+    <!-- 空调分类 -->
+    <div class="category-title" id="aircon">空调专区 · 清凉一夏</div>
+    <div class="container">
+        <!-- 格力空调 Ai节能王子 -->
+        <div class="product" onclick="go('https://u.jd.com/laRTPNH')">
+            <div class="product-tag-corner">爆款</div>
+            <div class="product-img-wrap">
+                <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/v1_gnKoCQEy_70860048935169395590210_f9138b30b8fe31f02aeca137c1261707_sx_101722_www800-800~tplv-be4g95zd3a-image.jpeg" alt="格力空调Ai节能王子">
+                <div class="product-discount">立减300</div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">格力空调 Ai节能王子 变频节能 一级能效 1.5匹 静音省电</div>
+                <div class="product-price-wrap">
+                    <div class="product-price">¥3599</div>
+                    <div class="product-price-original">¥3999</div>
+                </div>
+                <div class="product-sales">
+                    <span class="sales-icon">5万+</span>
+                    <span class="rating-icon">98%</span>
+                </div>
+                <div class="product-tags">
+                    <span class="product-tag">AI节能</span>
+                    <span class="product-tag">一级能效</span>
+                    <span class="product-tag">免费安装</span>
+                </div>
+            </div>
+        </div>
+        <!-- 美的空调 -->
+        <div class="product" onclick="go('https://u.jd.com/你的美的空调链接')">
+            <div class="product-tag-corner">新品</div>
+            <div class="product-img-wrap">
+                <img src="https://p11-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_8e76c8e917560158090d267d35f41609_sx_479165_www1000-1000~tplv-be4g95zd3a-image.jpeg" alt="美的空调">
+                <div class="product-discount">立减200</div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">美的空调 酷省电 新一级能效 变频冷暖 1.5匹 智能控温</div>
+                <div class="product-price-wrap">
+                    <div class="product-price">¥2799</div>
+                    <div class="product-price-original">¥3199</div>
+                </div>
+                <div class="product-sales">
+                    <span class="sales-icon">8万+</span>
+                    <span class="rating-icon">97%</span>
+                </div>
+                <div class="product-tags">
+                    <span class="product-tag">酷省电</span>
+                    <span class="product-tag">变频冷暖</span>
+                    <span class="product-tag">智能家电</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 商品5 -->
-    <div class="product" onclick="go('https://u.jd.com/你的链接5')">
-        <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/v1_gnKoCQEy_70860048935169395590210_f9138b30b8fe31f02aeca137c1261707_sx_101722_www800-800~tplv-be4g95zd3a-image.jpeg" alt="空调">
-        <div class="product-info">
-            <div class="product-title">格力 1.5匹变频壁挂空调 一级能效 静音省电</div>
-            <div class="product-price">¥3599</div>
-            <span class="product-tag">大牌</span>
-            <span class="product-tag">节能</span>
+    <!-- 冰箱分类 -->
+    <div class="category-title" id="refrigerator">冰箱专区 · 新鲜保鲜</div>
+    <div class="container">
+        <div class="product" onclick="go('https://u.jd.com/你的海尔冰箱链接')">
+            <div class="product-tag-corner">爆款</div>
+            <div class="product-img-wrap">
+                <img src="https://p11-doubao-search-sign.byteimg.com/pgc-image/6fe74e285ee74ddeb7059877f34b778b~tplv-be4g95zd3a-image.jpeg" alt="海尔冰箱">
+                <div class="product-discount">立减500</div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">海尔 470升对开门冰箱 风冷无霜 变频节能 一级能效 大容量</div>
+                <div class="product-price-wrap">
+                    <div class="product-price">¥3299</div>
+                    <div class="product-price-original">¥3699</div>
+                </div>
+                <div class="product-sales">
+                    <span class="sales-icon">10万+</span>
+                    <span class="rating-icon">99%</span>
+                </div>
+                <div class="product-tags">
+                    <span class="product-tag">风冷无霜</span>
+                    <span class="product-tag">大容量</span>
+                    <span class="product-tag">变频节能</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 商品6 -->
-    <div class="product" onclick="go('https://u.jd.com/你的链接6')">
-        <img src="https://p11-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_d97170fbba3816fac35f48fb017756aa_sx_543375_www1125-1119~tplv-be4g95zd3a-image.jpeg" alt="电视">
-        <div class="product-info">
-            <div class="product-title">海信 75英寸4K超高清 智能网络电视 全面屏</div>
-            <div class="product-price">¥7999</div>
-            <span class="product-tag">大屏</span>
-            <span class="product-tag">影院级</span>
+    <!-- 洗衣机分类 -->
+    <div class="category-title" id="washer">洗衣机专区 · 洁净洗护</div>
+    <div class="container">
+        <div class="product" onclick="go('https://u.jd.com/你的海尔洗衣机链接')">
+            <div class="product-tag-corner">热销</div>
+            <div class="product-img-wrap">
+                <img src="https://p26-doubao-search-sign.byteimg.com/ecom-shop-material/v1_hyqFnYYD_70778570379834493790799_382373ceca72ada82be4efe003c2ab16_sx_171884_www800-800~tplv-be4g95zd3a-image.jpeg" alt="海尔洗衣机">
+                <div class="product-discount">立减300</div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">海尔 10公斤洗烘一体机 滚筒洗衣机 全自动变频 除菌除螨</div>
+                <div class="product-price-wrap">
+                    <div class="product-price">¥2999</div>
+                    <div class="product-price-original">¥3299</div>
+                </div>
+                <div class="product-sales">
+                    <span class="sales-icon">7万+</span>
+                    <span class="rating-icon">98%</span>
+                </div>
+                <div class="product-tags">
+                    <span class="product-tag">洗烘一体</span>
+                    <span class="product-tag">除菌除螨</span>
+                    <span class="product-tag">变频静音</span>
+                </div>
+            </div>
         </div>
     </div>
 
-</div>
+    <!-- 小家电分类 -->
+    <div class="category-title" id="small">小家电专区 · 便捷生活</div>
+    <div class="container">
+        <div class="product" onclick="go('https://u.jd.com/你的小家电链接')">
+            <div class="product-tag-corner">特惠</div>
+            <div class="product-img-wrap">
+                <img src="https://p11-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_79821716865a0916f8a98451275994d5_sx_429598_www800-800~tplv-be4g95zd3a-image.jpeg" alt="美的电饭煲">
+                <div class="product-discount">立减100</div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">美的 智能电饭煲 5L大容量 家用多功能 预约煮饭 不粘内胆</div>
+                <div class="product-price-wrap">
+                    <div class="product-price">¥299</div>
+                    <div class="product-price-original">¥399</div>
+                </div>
+                <div class="product-sales">
+                    <span class="sales-icon">20万+</span>
+                    <span class="rating-icon">99%</span>
+                </div>
+                <div class="product-tags">
+                    <span class="product-tag">大容量</span>
+                    <span class="product-tag">智能预约</span>
+                    <span class="product-tag">不粘内胆</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<footer>
-    本页面仅为商品推荐 · 所有交易均在京东官方完成
-</footer>
+    <!-- 用户好评区 -->
+    <div class="review-section">
+        <div class="brand-title">用户真实好评</div>
+        <div class="review-list">
+            <div class="review-item">
+                <div class="review-user">
+                    <div class="user-avatar">王</div>
+                    <div class="user-name">王先生</div>
+                </div>
+                <div class="review-rating">★★★★★</div>
+                <div class="review-content">格力空调安装好了，制冷效果特别好，一级能效确实省电，静音效果也不错，晚上睡觉几乎听不到声音，京东送货快，安装师傅也很专业！</div>
+            </div>
+            <div class="review-item">
+                <div class="review-user">
+                    <div class="user-avatar">李</div>
+                    <div class="user-name">李女士</div>
+                </div>
+                <div class="review-rating">★★★★★</div>
+                <div class="review-content">海尔冰箱空间很大，风冷无霜真的太方便了，不用手动除霜，食材保鲜效果也好，价格比实体店便宜，还送了上门安装，太满意了！</div>
+            </div>
+            <div class="review-item">
+                <div class="review-user">
+                    <div class="user-avatar">张</div>
+                    <div class="user-name">张先生</div>
+                </div>
+                <div class="review-rating">★★★★★</div>
+                <div class="review-content">美的洗衣机洗烘一体太实用了，南方回南天不用愁，洗出来的衣服很干净，噪音也小，操作简单，老人也会用，性价比超高！</div>
+            </div>
+            <div class="review-item">
+                <div class="review-user">
+                    <div class="user-avatar">刘</div>
+                    <div class="user-name">刘女士</div>
+                </div>
+                <div class="review-rating">★★★★★</div>
+                <div class="review-content">美的电饭煲煮出来的饭很香，5L容量够一家人吃，预约功能太方便了，早上出门预约，晚上回家就能吃热饭，清洗也简单！</div>
+            </div>
+        </div>
+    </div>
 
-<script>
-    // 跳转到你的京东联盟链接
-    function go(url) {
-        window.open(url, '_blank');
-    }
-</script>
+    <!-- 售后保障区 -->
+    <div class="service-section">
+        <div class="brand-title">售后保障 · 购物无忧</div>
+        <div class="service-list">
+            <div class="service-item">
+                <div class="service-icon">📦</div>
+                <div class="service-text">京东物流 次日达</div>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">🔧</div>
+                <div class="service-text">全国联保 免费安装</div>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">🔄</div>
+                <div class="service-text">7天无理由退换</div>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">🛡️</div>
+                <div class="service-text">假一赔十 正品保障</div>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">💬</div>
+                <div class="service-text">24小时客服在线</div>
+            </div>
+        </div>
+    </div>
 
+    <!-- 底部 -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">关于我们</a>
+            <a href="#">隐私政策</a>
+            <a href="#">售后服务</a>
+            <a href="#">联系我们</a>
+        </div>
+        <p>💡 所有商品均为京东官方正品 · 点击跳转京东APP/网页下单</p>
+        <p>💰 京东联盟专属推广 · 下单即享佣金返现（仅推广员可见）</p>
+        <p class="copyright">© 2026 家电优选 · 本页面仅为商品推荐，交易均在京东官方平台完成</p>
+    </div>
+
+    <script>
+        // 跳转到京东联盟推广链接（新窗口打开）
+        function go(url) {
+            window.open(url, '_blank');
+        }
+
+        // 轮播图自动播放
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.banner-slide');
+        const dots = document.querySelectorAll('.banner-dot');
+        
+        function showSlide(index) {
+            // 隐藏所有轮播
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            // 显示当前轮播
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        // 下一张轮播
+        function nextSlide() {
+            let next = currentSlide + 1;
+            if (next >= slides.length) next = 0;
+            showSlide(next);
+        }
+        
+        // 点击指示器切换轮播
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                showSlide(index);
+            });
+        });
+        
+        // 自动轮播（3秒切换一次）
+        setInterval(nextSlide, 3000);
+
+        // 动态倒计时效果（营造紧迫感）
+        function countdown() {
+            const el = document.querySelector('.countdown');
+            let days = 2, hours = 8, minutes = 0, seconds = 0;
+            
+            setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                }
+                if (minutes < 0) {
+                    minutes = 59;
+                    hours--;
+                }
+                if (hours < 0) {
+                    hours = 23;
+                    days--;
+                }
+                if (days < 0) {
+                    days = 0;
+                    hours = 0;
+                    minutes = 0;
+                    seconds = 0;
+                }
+                el.textContent = `${days}天${hours}小时${minutes}分${seconds}秒`;
+            }, 1000);
+        }
+        // 启动倒计时
+        countdown();
+
+        // 导航栏点击定位（平滑滚动）
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // 切换激活状态
+                document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                // 平滑滚动到对应分类
+                const target = document.querySelector(this.getAttribute('href'));
+                window.scrollTo({
+                    top: target.offsetTop - 70,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
