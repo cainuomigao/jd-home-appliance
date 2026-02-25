@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>家电优选 | 京东官方好物推荐</title>
+    <title>家电 | 京东官方好物推荐</title>
     <style>
         /* 全局样式重置+基础变量 */
         :root {
